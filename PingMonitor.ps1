@@ -124,6 +124,7 @@ $list.View = 'Details'
 $list.FullRowSelect = $true
 $list.CheckBoxes = $true
 $list.OwnerDraw = $false
+# only allow toggling the checkbox by clicking the checkbox area itself (not the row text)
 [void]$list.Columns.Add('Name',85)
 [void]$list.Columns.Add('IP',120)
 [void]$list.Columns.Add('State',60)
@@ -295,8 +296,9 @@ $editBox.Add_KeyDown({
     elseif ($_.KeyCode -eq 'Escape') { $editBox.Visible=$false; $script:editItem=$null; $script:editCol=-1 }
 })
 
-$list.Add_MouseDoubleClick({
+$list.Add_MouseClick({
     param($src,$e)
+    if ($e.Button -ne [System.Windows.Forms.MouseButtons]::Right) { return }
     $hit = $list.HitTest($e.Location)
     $item = $hit.Item
     if ($null -eq $item) { return }
@@ -725,5 +727,6 @@ if ($script:savedMode -eq 'n' -and $script:rbNRef) { $script:rbNRef.Checked = $t
 elseif ($script:savedMode -eq 't' -and $script:rbTRef) { $script:rbTRef.Checked = $true }
 $script:loading = $false
 Refresh-List
-Write-Log 'Ready. Double-click Name/IP to edit, Color cell to set color. Up/Down to reorder.'
+Write-Log 'Ready. Right-click Name/IP to edit, right-click Color cell to change color. Up/Down to reorder.'
+$form.Add_Shown({ Show-Overlay })
 [void]$form.ShowDialog()
