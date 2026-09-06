@@ -1,8 +1,8 @@
 # PingMonitor
 
-FF14 のデータセンター（DC）への ping 品質を、複数まとめて監視できる軽量ツールです。
-ゲーム中もじゃまにならない小さなオーバーレイに、平均 ms・損失率・推移グラフを表示します。
-インストール不要。Windows 用。
+FF14 のデータセンター（DC）への ping 品質を、複数まとめて監視できる軽量アプリです。
+ゲーム中も邪魔にならない小さいオーバーレイ表示・平均 ms・損失率・推移グラフを表示します。
+インストール不要、Windows 用。
 
 ---
 
@@ -51,9 +51,6 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 
 Windows 10 / 11（Windows PowerShell 5.1 で動作確認）
 
-## ライセンス
-
-MIT License
 
 ---
 ---
@@ -108,7 +105,3 @@ The verdict is based on the most recent 30 samples.
 ## Requirements
 
 Windows 10 / 11 (tested on Windows PowerShell 5.1)
-
-## License
-
-MIT License
