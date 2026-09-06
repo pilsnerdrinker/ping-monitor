@@ -4,6 +4,12 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 ゲーム中も邪魔にならない小さなオーバーレイに、現在の ms・損失率・推移グラフを表示します。
 インストール不要、Windows 用。
 
+## ダウンロード
+
+[Releases](../../releases) から `PingMonitor.exe` をダウンロードしてください。
+**この exe 1 つだけで動きます**（インストールや他のファイルは不要です）。
+初回起動時に「WindowsによってPCが保護されました」と表示される場合は、「詳細情報」→「実行」で起動できます（下記「注意」参照）。
+
 ---
 
 ## できること
@@ -29,7 +35,8 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 
 ## 使い方
 
-1. `PingMonitor.bat` をダブルクリック（または `PingMonitor.ps1` を右クリック →「PowerShell で実行」）
+1. `PingMonitor.exe` をダブルクリックで起動します
+   （ソースから動かす場合は `PingMonitor.bat` をダブルクリック、または `PingMonitor.ps1` を右クリック →「PowerShell で実行」）
 2. 測りたい DC にチェックを入れる（起動時は全部チェック済み。左上の「All」で全選択／全解除）
 3. モード（-t 連続 / -n 回数）を選んで「Start selected」
 4. オーバーレイ（小窓）は起動時に自動で表示されます。「Overlay」ボタンで表示／非表示を切り替え。ドラッグで移動、マウスホイールで濃さ調整、右クリックで閉じる
@@ -70,6 +77,12 @@ A lightweight tool to monitor ping quality to FF14 data centers (DCs), several a
 It shows the current ms, packet loss, and a trend graph in a small always-on-top overlay
 that stays out of your way while gaming. No installation required. For Windows.
 
+## Download
+
+Get `PingMonitor.exe` from [Releases](../../releases).
+**The single exe is all you need** — no installation, no other files required.
+On first launch, Windows may show "Windows protected your PC" — click "More info" → "Run anyway" (see Notes below).
+
 ## Features
 
 - Presets for the 4 FF14 DCs (Elemental / Gaia / Mana / Meteor). IPs can be added, edited, or removed
@@ -93,7 +106,8 @@ The verdict is based on the most recent 30 samples.
 
 ## How to use
 
-1. Double-click `PingMonitor.bat` (or right-click `PingMonitor.ps1` → "Run with PowerShell")
+1. Double-click `PingMonitor.exe` to launch
+   (or, to run from source: double-click `PingMonitor.bat`, or right-click `PingMonitor.ps1` → "Run with PowerShell")
 2. Check the DCs you want to measure (all checked at startup; use "All" at the top-left to select/clear all)
 3. Pick a mode (-t continuous / -n count) and click "Start selected"
 4. The overlay (small window) appears automatically on startup. Use the "Overlay" button to toggle it. Drag to move, mouse wheel to change opacity, right-click to close
