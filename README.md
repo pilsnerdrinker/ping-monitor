@@ -32,13 +32,13 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 1. `PingMonitor.bat` をダブルクリック（または `PingMonitor.ps1` を右クリック →「PowerShell で実行」）
 2. 測りたい DC にチェックを入れる（起動時は全部チェック済み。左上の「All」で全選択／全解除）
 3. モード（-t 連続 / -n 回数）を選んで「Start selected」
-4. 「Overlay」ボタンで小窓を表示（もう一度押すと非表示）。ドラッグで移動、マウスホイールで濃さ調整、右クリックで閉じる
+4. オーバーレイ（小窓）は起動時に自動で表示されます。「Overlay」ボタンで表示／非表示を切り替え。ドラッグで移動、マウスホイールで濃さ調整、右クリックで閉じる
 5. 止めるときは「STOP ALL」。「Export CSV」で結果を保存できます
 
 ### 行の編集
 
-- 名前・IP のセルを **ダブルクリック**すると、その場で書き換えられます（Enter で確定）
-- 一番右の色セルを **ダブルクリック**すると、グラフの色を変えられます
+- 名前・IP のセルを **右クリック**すると、その場で書き換えられます（Enter で確定）
+- 一番右の色セルを **右クリック**すると、グラフの色を変えられます
 - 「↑」「↓」で並び順を変更できます（オーバーレイの表示順にも反映されます）
 - 「Reset」で、プリセットの 4 DC に戻せます（確認あり）
 
@@ -96,13 +96,13 @@ The verdict is based on the most recent 30 samples.
 1. Double-click `PingMonitor.bat` (or right-click `PingMonitor.ps1` → "Run with PowerShell")
 2. Check the DCs you want to measure (all checked at startup; use "All" at the top-left to select/clear all)
 3. Pick a mode (-t continuous / -n count) and click "Start selected"
-4. Click "Overlay" to show the small window (click again to hide). Drag to move, mouse wheel to change opacity, right-click to close
+4. The overlay (small window) appears automatically on startup. Use the "Overlay" button to toggle it. Drag to move, mouse wheel to change opacity, right-click to close
 5. Click "STOP ALL" to stop. Use "Export CSV" to save results
 
 ### Editing rows
 
-- **Double-click** a Name or IP cell to edit it in place (Enter to confirm)
-- **Double-click** the color cell (far right) to change the graph color
+- **Right-click** a Name or IP cell to edit it in place (Enter to confirm)
+- **Right-click** the color cell (far right) to change the graph color
 - Use "↑" / "↓" to reorder (the overlay follows the same order)
 - "Reset" restores the default 4 DCs (with confirmation)
 
