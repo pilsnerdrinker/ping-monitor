@@ -1,4 +1,4 @@
-﻿<#
+<#
 ================================================================
   PingMonitor.ps1  -  Ping quality checker (FF14 DC preset)
   - Save/reorder/monitor multiple IPs
@@ -54,7 +54,9 @@ function Save-Settings {
         $mode = 't'; $count = 300
         if ($script:rbNRef -and $script:rbNRef.Checked) { $mode = 'n' }
         if ($script:numNRef) { $count = [int]$script:numNRef.Value }
-        $obj = [pscustomobject]@{ targets=$arr; mode=$mode; count=$count }
+        $px = $null; $py = $null
+        if ($script:ovLastPos) { $px = [int]$script:ovLastPos.X; $py = [int]$script:ovLastPos.Y }
+        $obj = [pscustomobject]@{ targets=$arr; mode=$mode; count=$count; posX=$px; posY=$py }
         ($obj | ConvertTo-Json -Compress -Depth 5) | Set-Content -Path $script:settingsPath -Encoding UTF8
     } catch { }
 }
@@ -72,6 +74,9 @@ function Load-Settings {
             $items = $data.targets
             if ($null -ne $data.PSObject.Properties['mode'])  { $script:savedMode  = [string]$data.mode }
             if ($null -ne $data.PSObject.Properties['count']) { $script:savedCount = [int]$data.count }
+            if (($null -ne $data.PSObject.Properties['posX']) -and ($null -ne $data.posX) -and ($null -ne $data.posY)) {
+                $script:ovLastPos = New-Object System.Drawing.Point ([int]$data.posX), ([int]$data.posY)
+            }
         } else {
             $items = $data
         }
@@ -156,6 +161,27 @@ $btnDown = New-Object System.Windows.Forms.Button
 $btnDown.Text = [char]0x2193  # down arrow
 $btnDown.Location=New-Object System.Drawing.Point(520,44); $btnDown.Size=New-Object System.Drawing.Size(56,28)
 $form.Controls.Add($btnDown)
+$btnReset = New-Object System.Windows.Forms.Button
+$btnReset.Text='Reset'; $btnReset.Location=New-Object System.Drawing.Point(520,84); $btnReset.Size=New-Object System.Drawing.Size(56,28)
+$btnReset.Add_Click({
+    $ans = [System.Windows.Forms.MessageBox]::Show(
+        'Reset to the default 4 data centers? Your current list, colors and order will be lost.',
+        'Reset', [System.Windows.Forms.MessageBoxButtons]::OKCancel, [System.Windows.Forms.MessageBoxIcon]::Warning)
+    if ($ans -eq [System.Windows.Forms.DialogResult]::OK) {
+        foreach ($ip in @($script:monitors.Keys)) { Stop-One $ip }
+        $script:monitors.Clear()
+        $script:targets = [System.Collections.ArrayList]@(
+            [pscustomobject]@{ Name='elemental'; Ip='119.252.36.6'; Color=$script:defaultColors[0]; Checked=$true }
+            [pscustomobject]@{ Name='mana';      Ip='119.252.36.8'; Color=$script:defaultColors[1]; Checked=$true }
+            [pscustomobject]@{ Name='gaia';      Ip='119.252.36.7'; Color=$script:defaultColors[2]; Checked=$true }
+            [pscustomobject]@{ Name='meteor';    Ip='119.252.36.9'; Color=$script:defaultColors[3]; Checked=$true }
+        )
+        $script:firstFill = $true
+        Refresh-List
+        Save-Settings
+    }
+})
+$form.Controls.Add($btnReset)
 
 $script:firstFill = $true
 function Refresh-List {
@@ -522,13 +548,15 @@ $script:ovFontAvg = New-Object System.Drawing.Font('Segoe UI',12,[System.Drawing
 $script:overlay = $null
 $script:overlayPanel = $null
 $script:ovOpacity = 0.88
+$script:ovLastPos = $null
 function Update-OverlayHeight {
     if (-not ($script:overlay -and -not $script:overlay.IsDisposed)) { return }
     $rowH = 44
     $cnt = 0
     foreach ($t in $script:targets) {
         $m = $script:monitors[$t.Ip]
-        if ($m -and $m.Samples.Count -gt 0) { $cnt++ }
+        $chk = if ($null -ne $t.PSObject.Properties['Checked']) { [bool]$t.Checked } else { $true }
+        if ($m -and $m.Samples.Count -gt 0 -and $chk) { $cnt++ }
     }
     $needH = [math]::Max(1,$cnt) * $rowH + 30
     if ($script:overlay.Height -ne $needH) { $script:overlay.Height = $needH }
@@ -539,7 +567,9 @@ function Show-Overlay {
     $ov = New-Object System.Windows.Forms.Form
     $ov.FormBorderStyle='None'; $ov.TopMost=$true; $ov.BackColor=[System.Drawing.Color]::FromArgb(20,20,25)
     $ov.Opacity=$script:ovOpacity; $ov.StartPosition='Manual'
-    $ov.Location=New-Object System.Drawing.Point(40,40); $ov.ShowInTaskbar=$false
+    if ($script:ovLastPos) { $ov.Location = $script:ovLastPos } else { $ov.Location = New-Object System.Drawing.Point(40,40) }
+    $ov.ShowInTaskbar=$false
+    $ov.Add_FormClosing({ $script:ovLastPos = $script:overlay.Location; if (-not $script:loading) { Save-Settings } })
     $ov.Size=New-Object System.Drawing.Size(250,200)
 
     $panel = New-Object System.Windows.Forms.Panel
@@ -598,7 +628,8 @@ function Show-Overlay {
         $rows = @()
         foreach ($t in $script:targets) {
             $m = $script:monitors[$t.Ip]
-            if ($m -and $m.Samples.Count -gt 0) { $rows += ,@($t,$m) }
+            $chk = if ($null -ne $t.PSObject.Properties['Checked']) { [bool]$t.Checked } else { $true }
+            if ($m -and $m.Samples.Count -gt 0 -and $chk) { $rows += ,@($t,$m) }
         }
         if ($rows.Count -eq 0) {
             $g.DrawString('Start a measurement', $fontS, [System.Drawing.Brushes]::Gray, 8, 8)
