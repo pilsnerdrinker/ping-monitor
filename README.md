@@ -1,7 +1,7 @@
 # PingMonitor
 
 FF14 のデータセンター（DC）への ping 品質を、複数まとめて監視できる軽量アプリです。
-ゲーム中も邪魔にならない小さいオーバーレイ表示・平均 ms・損失率・推移グラフを表示します。
+ゲーム中も邪魔にならない小さなオーバーレイに、現在の ms・損失率・推移グラフを表示します。
 インストール不要、Windows 用。
 
 ---
@@ -9,12 +9,12 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 ## できること
 
 - FF14 の 4 DC（Elemental / Gaia / Mana / Meteor）をプリセット済み。IP は追加・編集・削除できます
-- 各 DC を同時に監視。回数指定（-n）と連続（-t）を選べます
+- 各 DC を同時に監視。連続（-t、初期設定）と回数指定（-n）を選べます
 - 一覧に 最小 / 最大 / 平均 / 損失率 をリアルタイム表示
-- 常に手前に出る小さなオーバーレイ：DC 名・平均 ms・損失率・推移グラフ（スパークライン）
+- 常に手前に出る小さなオーバーレイ：DC 名・現在の ms（大きく表示）・min/max/avg・損失率・推移グラフ（スパークライン）
 - 回線品質を色で判定（下記）
 - 測定結果を CSV で書き出し（時刻つき。あとで分析に使えます）
-- 設定（IP・名前・色・並び順・チェック状態）は自動保存され、次回起動時に復元されます
+- 設定（IP・名前・色・並び順・チェック状態・モード・オーバーレイ位置）は自動保存され、次回起動時に復元されます
 
 ## 品質の判定（オーバーレイ左の●の色）
 
@@ -30,9 +30,9 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 ## 使い方
 
 1. `PingMonitor.bat` をダブルクリック（または `PingMonitor.ps1` を右クリック →「PowerShell で実行」）
-2. 測りたい DC にチェックを入れる（起動時は全部チェック済み）
-3. モード（-n 回数 / -t 連続）を選んで「Start selected」
-4. 「Overlay」ボタンで小窓を表示。ドラッグで移動、マウスホイールで濃さ調整、右クリックで閉じる
+2. 測りたい DC にチェックを入れる（起動時は全部チェック済み。左上の「All」で全選択／全解除）
+3. モード（-t 連続 / -n 回数）を選んで「Start selected」
+4. 「Overlay」ボタンで小窓を表示（もう一度押すと非表示）。ドラッグで移動、マウスホイールで濃さ調整、右クリックで閉じる
 5. 止めるときは「STOP ALL」。「Export CSV」で結果を保存できます
 
 ### 行の編集
@@ -40,17 +40,26 @@ FF14 のデータセンター（DC）への ping 品質を、複数まとめて�
 - 名前・IP のセルを **ダブルクリック**すると、その場で書き換えられます（Enter で確定）
 - 一番右の色セルを **ダブルクリック**すると、グラフの色を変えられます
 - 「↑」「↓」で並び順を変更できます（オーバーレイの表示順にも反映されます）
+- 「Reset」で、プリセットの 4 DC に戻せます（確認あり）
+
+### オーバーレイの表示対象
+
+- オーバーレイには「チェックが入っていて、かつ測定中の DC」が表示されます
+- チェックを外すとオーバーレイから消えます。もう一度表示するにはチェックを入れて「Start selected」を押してください
 
 ## 注意
 
 - **IP は変わることがあります。** うまく測れない DC は、実際の接続先に合わせて IP を編集してください。実際にゲームが通信している IP は、コマンドプロンプトの `netstat` でも調べられます
-- 設定は `%APPDATA%\PingMonitor\settings.json` に保存されます。リセットしたいときはこのファイルを削除してください
+- 設定は `%APPDATA%\PingMonitor\settings.json` に保存されます。すべてリセットしたいときはこのファイルを削除してください（アプリ内の「Reset」は DC 一覧を初期化します）
 - exe 版は、ウイルス対策ソフトに誤検知されることがあります（スクリプトを exe 化しているため）。心配な場合は、同梱の `PingMonitor.ps1`（ソース）の中身を確認できます
 
 ## 動作環境
 
 Windows 10 / 11（Windows PowerShell 5.1 で動作確認）
 
+## ライセンス
+
+MIT License
 
 ---
 ---
@@ -58,18 +67,18 @@ Windows 10 / 11（Windows PowerShell 5.1 で動作確認）
 # PingMonitor (English)
 
 A lightweight tool to monitor ping quality to FF14 data centers (DCs), several at once.
-It shows average ms, packet loss, and a trend graph in a small always-on-top overlay
+It shows the current ms, packet loss, and a trend graph in a small always-on-top overlay
 that stays out of your way while gaming. No installation required. For Windows.
 
 ## Features
 
 - Presets for the 4 FF14 DCs (Elemental / Gaia / Mana / Meteor). IPs can be added, edited, or removed
-- Monitor multiple DCs at once, in count mode (-n) or continuous mode (-t)
+- Monitor multiple DCs at once, in continuous mode (-t, default) or count mode (-n)
 - Live min / max / average / loss in the list
-- Small always-on-top overlay: DC name, average ms, loss %, and a sparkline
+- Small always-on-top overlay: DC name, current ms (shown large), min/max/avg, loss %, and a sparkline
 - Color-coded quality verdict (see below)
 - Export results to CSV (with timestamps) for later analysis
-- Settings (IPs, names, colors, order, check state) are saved automatically and restored on next launch
+- Settings (IPs, names, colors, order, check state, mode, overlay position) are saved automatically and restored on next launch
 
 ## Quality verdict (the dot left of each name)
 
@@ -85,9 +94,9 @@ The verdict is based on the most recent 30 samples.
 ## How to use
 
 1. Double-click `PingMonitor.bat` (or right-click `PingMonitor.ps1` → "Run with PowerShell")
-2. Check the DCs you want to measure (all checked at startup)
-3. Pick a mode (-n count / -t continuous) and click "Start selected"
-4. Click "Overlay" for the small window. Drag to move, mouse wheel to change opacity, right-click to close
+2. Check the DCs you want to measure (all checked at startup; use "All" at the top-left to select/clear all)
+3. Pick a mode (-t continuous / -n count) and click "Start selected"
+4. Click "Overlay" to show the small window (click again to hide). Drag to move, mouse wheel to change opacity, right-click to close
 5. Click "STOP ALL" to stop. Use "Export CSV" to save results
 
 ### Editing rows
@@ -95,13 +104,23 @@ The verdict is based on the most recent 30 samples.
 - **Double-click** a Name or IP cell to edit it in place (Enter to confirm)
 - **Double-click** the color cell (far right) to change the graph color
 - Use "↑" / "↓" to reorder (the overlay follows the same order)
+- "Reset" restores the default 4 DCs (with confirmation)
+
+### What the overlay shows
+
+- The overlay shows DCs that are checked **and** currently being measured
+- Unchecking a DC removes it from the overlay. To show it again, check it and click "Start selected"
 
 ## Notes
 
 - **IPs can change.** If a DC won't measure correctly, edit its IP to the actual endpoint. You can find the IP your game is really talking to with `netstat` in Command Prompt
-- Settings are stored in `%APPDATA%\PingMonitor\settings.json`. Delete that file to reset
+- Settings are stored in `%APPDATA%\PingMonitor\settings.json`. Delete that file to reset everything (the in-app "Reset" only resets the DC list)
 - The exe build may be flagged by antivirus software (because it wraps a script). If concerned, you can review the included `PingMonitor.ps1` source
 
 ## Requirements
 
 Windows 10 / 11 (tested on Windows PowerShell 5.1)
+
+## License
+
+MIT License
